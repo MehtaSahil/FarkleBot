@@ -3,7 +3,7 @@
 #include <string.h>
 
 int determine_action(int, int, char*);
-int generate_sequences(int*, int, int*, int);
+int generate_sequences(int*, int, int*, int, int*, int**);
 int print_int_array(int*, int);
 
 int main2(int argc, char *argv[]) {
@@ -58,8 +58,14 @@ int main(int argc, char *argv[]) {
 
     int sequence_length = 0;
     int* sequence = malloc(sequence_length * sizeof(int));
+    int* sequence_count = malloc(1 * sizeof(int));
+    int** sequences = malloc(5000 * sizeof(int*));
 
-    generate_sequences(arr, arr_length, sequence, sequence_length);
+    generate_sequences(arr, arr_length, sequence, sequence_length, sequence_count, sequences);
+    printf("%d\n", *sequence_count);
+
+    free(sequence_count);
+    free(sequences);
 }
 
 int determine_action(int running_total, int remaining_dice, char* action) {
@@ -82,12 +88,10 @@ int determine_action(int running_total, int remaining_dice, char* action) {
     return 0;
 }
 
-int generate_sequences(int* arr, int arr_length, int* sequence, int sequence_length) {
+int generate_sequences(int* arr, int arr_length, int* sequence, int sequence_length, int* sequence_count, int** sequences) {
     if (sequence_length == arr_length) {
         return 0;
     }
-
-    /* print_int_array(arr, arr_length); */
 
     int i, j;
     for (i = 0; i < arr_length; i++) {
@@ -104,7 +108,7 @@ int generate_sequences(int* arr, int arr_length, int* sequence, int sequence_len
             continue;
         }
 
-
+        /* Copy old sequence into new sequence before appending */
         int new_sequence_length = sequence_length + 1;
         int* new_sequence = malloc(new_sequence_length * sizeof(int));
 
@@ -112,10 +116,14 @@ int generate_sequences(int* arr, int arr_length, int* sequence, int sequence_len
             new_sequence[j] = sequence[j];
         }
 
+        /* append new item to old sequence */
         new_sequence[new_sequence_length - 1] = arr[i];
-        print_int_array(new_sequence, new_sequence_length);
 
-        generate_sequences(arr, arr_length, new_sequence, new_sequence_length);
+        /* print_int_array(new_sequence, new_sequence_length); */
+        *sequence_count = *sequence_count + 1;
+        sequences[*sequence_count] = new_sequence;
+        print_int_array(sequences[*sequence_count], new_sequence_length);
+        generate_sequences(arr, arr_length, new_sequence, new_sequence_length, sequence_count, sequences);
 
         free(new_sequence);
     }

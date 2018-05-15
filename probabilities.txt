@@ -1,0 +1,84 @@
+PRECOMPUTED PROBABILITIES: http://www.jonmutchler.com/FarkleFun2.html
+
+==================== SIX DICE (46656) ====================
+specific six of a kind      : 1
+== six of a kind               : 6
+specific five of a kind     : 30
+== five of a kind              : 180
+== two triplets                : 300
+== straight                    : 720
+specific four of a kind     : 300
+== four of a kind              : 1800
+== three pairs                 : 2250
+specific three of a kind    : 2280
+== three of a kind             : 13680
+other ones/fives            : 26544
+== other ones                  : 13272
+== other fives                 : 13272
+== farkles                     : 1176
+non-farkles                 : 45480
+
+EV = 313.310 - (1176/46656)*running_total
+running_total_limit = 12430.102
+
+==================== FIVE DICE (7776) ====================
+specific five of a kind     : 1
+== five of a kind              : 6
+specific four of a kind     : 25
+== four of a kind              : 150
+specific three of a kind    : 250
+== three of a kind             : 1500
+other ones/fives            : 5520
+== other ones                  : 2760
+== other fives                 : 2760
+== farkles                     : 600
+non-farkles                 : 7176
+
+EV = 148.019 - (600/7776)*running_total
+running_total_limit = 1918.333
+
+==================== FOUR DICE (1296) ====================
+specific four of a kind     : 1
+== four of a kind              : 6
+specific three of a kind    : 20
+== three of a kind             : 120
+other ones/fives            : 966
+== other ones                  : 483
+== other fives                 : 483
+== farkles                     : 204
+non-farkles                 : 1092
+
+EV = 96.026 - (204/1296)*running_total
+running_total_limit = 610.049
+
+==================== THREE DICE ====================
+specific three of a kind    : 1
+== three of a kind             : 6
+other ones/fives            : 150
+== other ones                  : 75
+== other fives                 : 75
+== farkles                     : 60
+non-farkles                 : 156
+
+EV = 62.731 - (60/216)*running_total
+running_total_limit = 225.833
+
+==================== TWO DICE ====================
+other ones/fives            : 20
+== other ones                  : 10
+== other fives                 : 10
+== farkles                     : 16
+non-farkles                 : 20
+
+EV = 41.666 - (16/36)*running_total
+running_total_limit = 93.75
+
+==================== ONE DICE ====================
+other ones/fives            : 2
+== other ones                  : 1
+== other fives                 : 1
+== farkles                     : 4
+non-farkles                 : 2
+
+EV = 25 - (4/6)*running_total
+running_total_limit = 37.5

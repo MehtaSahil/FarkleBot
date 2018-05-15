@@ -3,8 +3,10 @@
 #include <string.h>
 
 int determine_action(int, int, char*);
+int generate_sequences(int*, int, int*, int);
+int print_int_array(int*, int);
 
-int main(int argc, char *argv[]) {
+int main2(int argc, char *argv[]) {
     int still_playing = 1;
     int running_total = 0;
     int scored = 0;
@@ -47,6 +49,19 @@ int main(int argc, char *argv[]) {
     free(action);
 }
 
+int main(int argc, char *argv[]) {
+    int arr_length = 3;
+    int* arr = malloc(arr_length * sizeof(int));
+    arr[0] = 1;
+    arr[1] = 2;
+    arr[2] = 3;
+
+    int sequence_length = 0;
+    int* sequence = malloc(sequence_length * sizeof(int));
+
+    generate_sequences(arr, arr_length, sequence, sequence_length);
+}
+
 int determine_action(int running_total, int remaining_dice, char* action) {
     float* running_total_limits = malloc(6 * sizeof(float));
     running_total_limits[5] = 12430.102;
@@ -65,4 +80,53 @@ int determine_action(int running_total, int remaining_dice, char* action) {
     free(running_total_limits);
 
     return 0;
+}
+
+int generate_sequences(int* arr, int arr_length, int* sequence, int sequence_length) {
+    if (sequence_length == arr_length) {
+        return 0;
+    }
+
+    /* print_int_array(arr, arr_length); */
+
+    int i, j;
+    for (i = 0; i < arr_length; i++) {
+
+        /* If arr[i] is already in the sequence, move to next index */
+        int contains = 0;
+        for (j = 0; j < sequence_length; j++) {
+            if (sequence[j] == arr[i]) {
+                contains = 1;
+            }
+        }
+
+        if (contains) {
+            continue;
+        }
+
+
+        int new_sequence_length = sequence_length + 1;
+        int* new_sequence = malloc(new_sequence_length * sizeof(int));
+
+        for (j = 0; j < sequence_length; j++) {
+            new_sequence[j] = sequence[j];
+        }
+
+        new_sequence[new_sequence_length - 1] = arr[i];
+        print_int_array(new_sequence, new_sequence_length);
+
+        generate_sequences(arr, arr_length, new_sequence, new_sequence_length);
+
+        free(new_sequence);
+    }
+}
+
+int print_int_array(int* arr, int arr_length) {
+    printf("[");
+    int i;
+    for (i = 0; i < arr_length - 1; i++) {
+        printf("%d, ", arr[i]);
+    }
+
+    printf("%d]\n", arr[arr_length - 1]);
 }

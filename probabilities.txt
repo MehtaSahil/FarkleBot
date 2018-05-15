@@ -51,7 +51,7 @@ non-farkles                 : 1092
 EV = 96.026 - (204/1296)*running_total
 running_total_limit = 610.049
 
-==================== THREE DICE ====================
+==================== THREE DICE (216) ====================
 specific three of a kind    : 1
 == three of a kind             : 6
 other ones/fives            : 150
@@ -63,7 +63,7 @@ non-farkles                 : 156
 EV = 62.731 - (60/216)*running_total
 running_total_limit = 225.833
 
-==================== TWO DICE ====================
+==================== TWO DICE (36) ====================
 other ones/fives            : 20
 == other ones                  : 10
 == other fives                 : 10
@@ -73,7 +73,7 @@ non-farkles                 : 20
 EV = 41.666 - (16/36)*running_total
 running_total_limit = 93.75
 
-==================== ONE DICE ====================
+==================== ONE DICE (6) ====================
 other ones/fives            : 2
 == other ones                  : 1
 == other fives                 : 1

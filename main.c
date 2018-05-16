@@ -4,7 +4,8 @@
 
 int determine_action(int, int, char*);
 int generate_sequences(int*, int, int*, int, int**, int*);
-int print_zero_terminated_int_array(int*);
+int print_zero_terminated_int_array(int*, int);
+int print_int_array(int*, int, int);
 
 int main2(int argc, char *argv[]) {
     int still_playing = 1;
@@ -52,7 +53,7 @@ int main2(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
     int i;
 
-    int arr_length = 6;
+    int arr_length = 3;
     int* arr = malloc(arr_length * sizeof(int));
 
     for (i = 0; i < arr_length; i++) {
@@ -62,6 +63,9 @@ int main(int argc, char *argv[]) {
     int sequence_length = 0;
     int* sequence = malloc(sequence_length * sizeof(int));
     int* sequence_count = malloc(sizeof(int));
+
+    /* TODO : make allocation more specific to arr_length
+    num_sequences = n + n(n-1) + n(n-1)(n-2) + ... + n! */
     int** sequences = malloc(5000 * sizeof(int*));
 
     generate_sequences(arr, arr_length,
@@ -69,11 +73,13 @@ int main(int argc, char *argv[]) {
                         sequences, sequence_count);
     printf("%d\n", *sequence_count);
 
+    /* print all generated sequences */
     for (i = 0; i < *sequence_count; i++) {
-        print_zero_terminated_int_array(sequences[i]);
+        /* print starting at 1 b/c [0] is length */
+        print_int_array(sequences[i], 1, sequences[i][0]);
     }
 
-    /* cleanup allocated memory */
+    /* cleanup */
     for (i = 0; i < *sequence_count; i++) {
         free(sequences[i]);
     }
@@ -136,23 +142,34 @@ int generate_sequences(int* arr, int arr_length,
 
         /* append new item to old sequence */
         new_sequence[new_sequence_length - 1] = arr[i];
-        sequences[*sequence_count] = new_sequence;
+
+        /* embed length of sequence as first element of the array
+        This is NOT ideal. Implement sequences as int*** for cleaner impl
+        */
+        int* new_sequence_with_length = malloc((new_sequence_length+1) * sizeof(int));
+        for (j = 0; j < new_sequence_length; j++) {
+            new_sequence_with_length[j+1] = new_sequence[j];
+        }
+
+        new_sequence_with_length[0] = new_sequence_length;
+
+        sequences[*sequence_count] = new_sequence_with_length;
         *sequence_count = *sequence_count + 1;
 
         generate_sequences(arr, arr_length,
                             new_sequence, new_sequence_length,
                             sequences, sequence_count);
+
+        free(new_sequence);
     }
 }
 
-/* Prints an integer array of nonzero values (ends at zero) */
-int print_zero_terminated_int_array(int* arr) {
+int print_int_array(int* arr, int start, int stop) {
     printf("[");
 
-    int i = 0;
-    while (arr[i + 1] != 0) {
+    int i;
+    for (i = start; i < stop; i++) {
         printf("%d, ", arr[i]);
-        i++;
     }
 
     printf("%d]\n", arr[i]);

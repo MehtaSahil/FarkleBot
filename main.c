@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-int determine_action(int, int, char*);
+int continue_or_stop(int, int, char*);
 int generate_sequences(int*, int, int*, int, int**, int*);
 int print_zero_terminated_int_array(int*, int);
 int print_int_array(int*, int, int);
 int choose_dice(int*, int);
 
-int main2(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     int still_playing = 1;
     int running_total = 0;
     int scored = 0;
@@ -37,7 +37,7 @@ int main2(int argc, char *argv[]) {
         printf("\n");
         printf("Okay, your current total is %d.\n", running_total);
 
-        determine_action(running_total, remaining_dice, action);
+        continue_or_stop(running_total, remaining_dice, action);
         printf("With %d dice remaining, I suggest that you [%s]\n", remaining_dice, action);
 
         printf("Would you like to continue? [Y = 1 / N = 0] : ");
@@ -51,17 +51,17 @@ int main2(int argc, char *argv[]) {
     free(action);
 }
 
-int main(int argc, char* argv[]) {
+int main2(int argc, char* argv[]) {
 
     int* roll = malloc(6 * sizeof(int));
-    roll[0] = 4;
-    roll[1] = 3;
-    roll[2] = 4;
-    /* roll[3] = 2;
+    roll[0] = 6;
+    roll[1] = 6;
+    roll[2] = 6;
+    roll[3] = 1;
     roll[4] = 4;
-    roll[5] = 6; */
+    roll[5] = 3;
 
-    choose_dice(roll, 3);
+    choose_dice(roll, 6);
 
     free(roll);
 
@@ -84,8 +84,13 @@ int choose_dice(int* roll, int num_rolled_dice) {
         indices[i] = i;
     }
 
+    /* the sequence, sequence_length combination (both == 0) might seem odd.
+    This creates an empty sequence to pass to generate_sequences so that the
+    function can build from nothing instead of building from part
+    of a previously created sequence. */
     int sequence_length = 0;
     int* sequence = malloc(sequence_length * sizeof(int));
+
     int* num_sequences = malloc(sizeof(int));
 
     /* stores all sequences of selection indices
@@ -97,6 +102,8 @@ int choose_dice(int* roll, int num_rolled_dice) {
                         sequence, sequence_length,
                         sequences, num_sequences);
 
+    printf("num_sequences : %d\n", *num_sequences);
+
     /* make all selections */
     for (i = 0; i < *num_sequences; i++) {
         int* selection_indices = sequences[i];
@@ -104,6 +111,7 @@ int choose_dice(int* roll, int num_rolled_dice) {
 
         int* selection = malloc(selection_length * sizeof(int));
 
+        /* make the selection */
         int j;
         for (j = 0; j < selection_length; j++) {
             selection[j] = roll[selection_indices[j+1]];
@@ -128,11 +136,12 @@ int choose_dice(int* roll, int num_rolled_dice) {
 
     free(num_sequences);
     free(sequences);
+    free(indices);
 
     return 0;
 }
 
-int determine_action(int running_total, int remaining_dice, char* action) {
+int continue_or_stop(int running_total, int remaining_dice, char* action) {
     float* running_total_limits = malloc(6 * sizeof(float));
     running_total_limits[5] = 12430.102;
     running_total_limits[4] = 1918.333;

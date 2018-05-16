@@ -6,6 +6,7 @@ int determine_action(int, int, char*);
 int generate_sequences(int*, int, int*, int, int**, int*);
 int print_zero_terminated_int_array(int*, int);
 int print_int_array(int*, int, int);
+int choose_dice(int*, int);
 
 int main2(int argc, char *argv[]) {
     int still_playing = 1;
@@ -50,42 +51,85 @@ int main2(int argc, char *argv[]) {
     free(action);
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
+
+    int* roll = malloc(6 * sizeof(int));
+    roll[0] = 4;
+    roll[1] = 3;
+    roll[2] = 4;
+    /* roll[3] = 2;
+    roll[4] = 4;
+    roll[5] = 6; */
+
+    choose_dice(roll, 3);
+
+    free(roll);
+
+    return 0;
+}
+
+/* Given a set of values for rolled dice, choose the best dice
+to keep before moving forward */
+int choose_dice(int* roll, int num_rolled_dice) {
+
+    printf("initial roll : ");
+    print_int_array(roll, 0, num_rolled_dice-1);
+
+    /* Generate all selections of dice */
+    int* indices = malloc(num_rolled_dice * sizeof(int));
+    int num_indices = num_rolled_dice;
+
     int i;
-
-    int arr_length = 3;
-    int* arr = malloc(arr_length * sizeof(int));
-
-    for (i = 0; i < arr_length; i++) {
-        arr[i] = i+1;
+    for (i = 0; i < num_rolled_dice; i++) {
+        indices[i] = i;
     }
 
     int sequence_length = 0;
     int* sequence = malloc(sequence_length * sizeof(int));
-    int* sequence_count = malloc(sizeof(int));
+    int* num_sequences = malloc(sizeof(int));
 
-    /* TODO : make allocation more specific to arr_length
-    num_sequences = n + n(n-1) + n(n-1)(n-2) + ... + n! */
+    /* stores all sequences of selection indices
+        e.g. [0, 2, 1] selects the 0th, 2nd, and 1st indices from the roll
+        IN THAT ORDER */
     int** sequences = malloc(5000 * sizeof(int*));
 
-    generate_sequences(arr, arr_length,
+    generate_sequences(indices, num_indices,
                         sequence, sequence_length,
-                        sequences, sequence_count);
-    printf("%d\n", *sequence_count);
+                        sequences, num_sequences);
 
-    /* print all generated sequences */
-    for (i = 0; i < *sequence_count; i++) {
-        /* print starting at 1 b/c [0] is length */
-        print_int_array(sequences[i], 1, sequences[i][0]);
+    /* make all selections */
+    for (i = 0; i < *num_sequences; i++) {
+        int* selection_indices = sequences[i];
+        int selection_length = sequences[i][0];
+
+        int* selection = malloc(selection_length * sizeof(int));
+
+        int j;
+        for (j = 0; j < selection_length; j++) {
+            selection[j] = roll[selection_indices[j+1]];
+        }
+
+        print_int_array(selection, 0, selection_length - 1);
+
+        /* for each selection:
+            generate counts array
+            use util.h functions to determine ways to score with the selection
+            choose the max possible score for this selection
+            pick the highest max score from all selections
+            return this selection as the desired selection */
+
+        free(selection);
     }
 
     /* cleanup */
-    for (i = 0; i < *sequence_count; i++) {
+    for (i = 0; i < *num_sequences; i++) {
         free(sequences[i]);
     }
 
-    free(sequence_count);
+    free(num_sequences);
     free(sequences);
+
+    return 0;
 }
 
 int determine_action(int running_total, int remaining_dice, char* action) {

@@ -1,5 +1,22 @@
 PRECOMPUTED PROBABILITIES: http://www.jonmutchler.com/FarkleFun2.html
 
+==================== Scoring Criterion ====================
+six of a kind       : 3000
+five of a kind      : 2000
+two triplets        : 2500
+straight            : 1500
+four of a kind      : 1000
+three pairs         : 1500
+three of a kind (1) : 300
+three of a kind (2) : 200
+three of a kind (3) : 300
+three of a kind (4) : 400
+three of a kind (5) : 500
+three of a kind (6) : 600
+one                 : 100
+five                : 50
+farkle              : -1 * running_total
+
 ==================== SIX DICE (46656) ====================
 specific six of a kind      : 1
 == six of a kind               : 6

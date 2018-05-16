@@ -11,6 +11,7 @@ int main(int argc, char *argv[]) {
     int remaining_dice = 6;
     char* action = malloc(50 * sizeof(char));
 
+    /* main game loop */
     while (still_playing) {
 
         printf("running total : %d\n", running_total);
@@ -47,6 +48,8 @@ int main(int argc, char *argv[]) {
     free(action);
 }
 
+/* given the running total and the amount of dice left to roll
+    decide (based on expected values) whether the player should roll again */
 int continue_or_stop(int running_total, int remaining_dice, char* action) {
     float* running_total_limits = malloc(6 * sizeof(float));
     running_total_limits[5] = 12430.102;
